@@ -15,3 +15,5 @@ jobs:
       - name: Dire bonjour
         run: echo Bonjour depuis GitHub Actions !
 
+      - name: Lister les fichiers
+        run: ls -al
