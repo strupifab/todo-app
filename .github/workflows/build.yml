@@ -42,3 +42,9 @@ jobs:
           name: todo-app
           path: app/
 
+      - name: Lister les paquets
+        run: |
+          echo ::group::Paquets installés
+          pip list
+          echo ::endgroup::
+
