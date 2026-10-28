@@ -34,7 +34,7 @@ jobs:
         run: python -m compileall app/
  
       - name: Écrire un résumé
-        run: echo ### ✅ Build réussi >> 
+        run: echo "Python : python --version" >> "$GITHUB_STEP_SUMMARY"
  
       - name: Sauvegarder l'artefact
         uses: actions/upload-artifact@v4
