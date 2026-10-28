@@ -1,0 +1,44 @@
+name: Build
+ 
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+ 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+ 
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+          cache: pip
+ 
+      - name: Installer les dépendances
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+ 
+      - name: Vérifier le code (lint)
+        run: |
+          pip install flake8
+          flake8 app/ tests/
+ 
+      - name: Compiler
+        run: python -m compileall app/
+ 
+      - name: Écrire un résumé
+        run: echo ### ✅ Build réussi >> 
+ 
+      - name: Sauvegarder l'artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: todo-app
+          path: app/
+
