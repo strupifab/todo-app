@@ -36,6 +36,7 @@ jobs:
       - name: Écrire un résumé
         run: |
           echo "### Python : $(python --version)" >> "$GITHUB_STEP_SUMMARY"
+          cat "$GITHUB_STEP_SUMMARY"
  
       - name: Echo de la variable $GITHUB_STEP_SUMMARY
         run: |
