@@ -17,3 +17,6 @@ jobs:
 
       - name: Lister les fichiers
         run: ls -al
+
+      - name: Version Python
+        run: python3 --version
