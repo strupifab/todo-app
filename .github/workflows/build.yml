@@ -37,6 +37,10 @@ jobs:
         run: |
           echo "### Python : $(python --version)" >> "$GITHUB_STEP_SUMMARY"
  
+      - name: Echo de la variable $GITHUB_STEP_SUMMARY
+        run: |
+          echo "$GITHUB_STEP_SUMMARY"
+
       - name: Sauvegarder l'artefact
         uses: actions/upload-artifact@v4
         with:
