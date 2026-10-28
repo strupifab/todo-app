@@ -39,7 +39,7 @@ jobs:
  
       - name: Echo de la variable $GITHUB_STEP_SUMMARY
         run: |
-          echo "$GITHUB_STEP_SUMMARY"
+          echo "GITHUB_STEP_SUMMARY=$GITHUB_STEP_SUMMARY"
 
       - name: Sauvegarder l'artefact
         uses: actions/upload-artifact@v4
