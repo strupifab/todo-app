@@ -2,7 +2,7 @@
 from flask import Flask, jsonify, request
 
 # Configuration de l'application
-APP_TITLE = "Ma liste de tâches"
+APP_TITLE = "Ma liste v2"
 ADMIN_TOKEN = "admin-123"  # valeur écrite en dur : à corriger au lab 11
 
 
