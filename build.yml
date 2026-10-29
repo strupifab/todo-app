@@ -1,3 +1,0 @@
-- name: Écrire un résumé
-        run: |
-          echo ### Python : Python 3.14.4 >> 
