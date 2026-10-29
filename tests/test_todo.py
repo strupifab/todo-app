@@ -1,8 +1,8 @@
 import pytest
- 
+
 
 from app.todo import TodoList, app
- 
+
 
 # --- Tests unitaires de la classe TodoList ---------------------------
 
