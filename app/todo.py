@@ -22,8 +22,7 @@ class TodoList:
 
     def supprimer(self, index):
         """Supprime la tâche à la position index (0 = la première)."""
-        # del self.taches[index]
-        pass
+        del self.taches[index]
 
     def vider(self):
         """Supprime toutes les tâches."""
