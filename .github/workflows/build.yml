@@ -55,7 +55,7 @@ jobs:
           echo ::endgroup::
 
   docker:
-    needs: build
+    needs: test
     # On publie l'image seulement pour un push sur main, pas pour une PR
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
@@ -86,4 +86,41 @@ jobs:
           tags: |
             ${{ env.IMAGE }}:${{ github.sha }}
             ${{ env.IMAGE }}:latest
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+ 
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+ 
+      - name: Installer les dépendances
+        run: pip install -r requirements.txt
+ 
+      - name: Lancer les tests
+        run: pytest -v --junitxml=rapport.xml
+ 
+      - name: Rapport de tests
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Tests PyTest
+          path: rapport.xml
+          reporter: java-junit
+ 
+      - name: Garder le rapport
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rapport-tests
+          path: rapport.xml
 

@@ -1,5 +1,6 @@
 # Image de départ officielle : Linux + Python 3.12, version allégée
 FROM python:3.12-slim
+#FROM python:3.12
  
 # Dossier de travail dans le conteneur
 WORKDIR /app
