@@ -150,3 +150,29 @@ jobs:
             sleep 5
             curl --fail --silent http://localhost/health
 
+  deploy-production:
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ vars.APP_URL }}
+    steps:
+      - name: Calculer le nom de l'image
+        run: |
+          OWNER="${GITHUB_REPOSITORY_OWNER,,}"
+          echo "IMAGE=ghcr.io/$OWNER/todo-app:$GITHUB_SHA" >> "$GITHUB_ENV"
+ 
+      - name: Déployer via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: deploy
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            docker pull ${{ env.IMAGE }}
+            docker rm -f todo || true
+            docker run -d --name todo --restart always \
+              -p 80:5000 ${{ env.IMAGE }}
+            sleep 5
+            curl --fail --silent http://localhost/health
+
