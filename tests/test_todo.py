@@ -46,3 +46,19 @@ def test_api_ajouter_puis_lister():
     client.post("/taches", json={"texte": "Appeler Tom"})
     reponse = client.get("/taches")
     assert "Appeler Tom" in reponse.get_json()
+
+
+def test_api_vider_refuse_sans_jeton(monkeypatch):
+    monkeypatch.setattr("app.todo.ADMIN_TOKEN", "jeton-de-test")
+    client = app.test_client()
+    reponse = client.delete("/taches")
+    assert reponse.status_code == 403
+ 
+ 
+def test_api_vider_avec_jeton(monkeypatch):
+    monkeypatch.setattr("app.todo.ADMIN_TOKEN", "jeton-de-test")
+    client = app.test_client()
+    client.post("/taches", json={"texte": "A effacer"})
+    reponse = client.delete("/taches",
+                            headers={"X-Admin-Token": "jeton-de-test"})
+    assert reponse.get_json() == []

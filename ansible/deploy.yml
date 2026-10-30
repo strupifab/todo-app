@@ -8,6 +8,7 @@
     # Valeurs par défaut, remplacées par le pipeline (--extra-vars)
     image_repo: ghcr.io/strupifab/todo-app
     image_tag: latest
+    admin_token: "{{ lookup('env', 'ADMIN_TOKEN') }}"
   tasks:
     - name: Installer Docker et le module Python pour Docker
       ansible.builtin.apt:
@@ -28,6 +29,9 @@
         pull: always
         ports: ["80:5000"]
         restart_policy: always
+        env:
+          ADMIN_TOKEN: "{{ admin_token }}"
+        no_log: true #   ne jamais afficher le jeton dans les logs
 
     - name: Vérifier que l'application répond
       ansible.builtin.uri:

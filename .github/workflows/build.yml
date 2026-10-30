@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+
+# Moindre privilège : lecture seule par défaut pour tous les jobs
+permissions:
+  contents: read
  
 jobs:
   build:
@@ -144,6 +148,10 @@ jobs:
 
       - name: Déployer avec Ansible
         uses: dawidd6/action-ansible-playbook@v9
+        env:
+          ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+        with:
+          playbook: deploy.yml
         with:
           playbook: deploy.yml
           directory: ./ansible

@@ -3,3 +3,6 @@ __pycache__/
 .venv/
 rapport.xml
 ansible/inventory.ini
+.env
+.env.*
+!.env.example

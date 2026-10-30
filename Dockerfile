@@ -12,6 +12,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 2) Le code ensuite (il change souvent)
 COPY app/ ./app/
  
+# Ne pas tourner en administrateur (root) : utilisateur dédié
+RUN useradd --create-home appuser
+USER appuser
+
 # Port utilisé par l'application
 EXPOSE 5000
  

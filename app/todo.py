@@ -1,10 +1,16 @@
 """Application Todo : une petite liste de tâches (API web avec Flask)."""
+import os
+ 
+from dotenv import load_dotenv
 from flask import Flask, jsonify, request
-
-# Configuration de l'application
-APP_TITLE = "Ma liste v2"
-ADMIN_TOKEN = "admin-123"  # valeur écrite en dur : à corriger au lab 11
-
+ 
+# En local : lit le fichier .env s'il existe (jamais commité)
+load_dotenv()
+ 
+# Configuration lue dans l'environnement, plus rien en dur
+APP_TITLE = os.environ.get("APP_TITLE", "Ma liste de tâches")
+# Secret : aucune valeur par défaut
+ADMIN_TOKEN = os.environ.get("ADMIN_TOKEN")
 
 class TodoList:
     """Une liste de tâches gardée en mémoire."""
@@ -71,11 +77,12 @@ def effacer(index):
 @app.route("/taches", methods=["DELETE"])
 def tout_effacer():
     """Vide la liste : réservé à l'administrateur."""
+    if not ADMIN_TOKEN:
+        return jsonify(erreur="Jeton administrateur non configuré"), 503
     if request.headers.get("X-Admin-Token") != ADMIN_TOKEN:
         return jsonify(erreur="Accès refusé"), 403
     liste.vider()
     return jsonify(liste.taches)
-
 
 if __name__ == "__main__":
     # 0.0.0.0 : accessible depuis l'extérieur (indispensable dans Docker)
