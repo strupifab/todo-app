@@ -27,7 +27,7 @@
         name: todo
         image: "{{ image_repo }}:{{ image_tag }}"
         pull: always
-        ports: ["80:5000"]
+        ports: ["80:5000","8000:8000"]
         restart_policy: always
         env:
           ADMIN_TOKEN: "{{ admin_token }}"
