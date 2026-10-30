@@ -1,5 +1,5 @@
 # Application Todo
-![Build](https://github.com/<vous>/todo-app/actions/workflows/build.yml/badge.svg)
+![Build](https://github.com/strupifab/todo-app/actions/workflows/build.yml/badge.svg)
 
 Une petite API web de liste de tâches, écrite en Python avec Flask.
 C'est l'application « fil rouge » de la formation.
