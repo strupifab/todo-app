@@ -3,6 +3,7 @@ name: Build
 on:
   push:
     branches: [main]
+    paths-ignore: ["**.md", "docs/**"]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -10,10 +11,15 @@ on:
 # Moindre privilège : lecture seule par défaut pour tous les jobs
 permissions:
   contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
  
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Récupérer le code
         uses: actions/checkout@v4
@@ -63,6 +69,7 @@ jobs:
     # On publie l'image seulement pour un push sur main, pas pour une PR
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
       packages: write
@@ -81,12 +88,17 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Préparer Buildx (nécessaire pour le cache)
+        uses: docker/setup-buildx-action@v3
  
       - name: Construire et publier l'image
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags: |
             ${{ env.IMAGE }}:${{ github.sha }}
             ${{ env.IMAGE }}:latest
@@ -94,6 +106,7 @@ jobs:
   test:
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: read
       checks: write
@@ -131,6 +144,7 @@ jobs:
   deploy-staging:
     needs: docker
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     environment:
       name: staging
       url: ${{ vars.APP_URL }}
@@ -164,6 +178,7 @@ jobs:
   deploy-production:
     needs: deploy-staging
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     environment:
       name: production
       url: ${{ vars.APP_URL }}
