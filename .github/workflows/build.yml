@@ -131,24 +131,29 @@ jobs:
       name: staging
       url: ${{ vars.APP_URL }}
     steps:
-      - name: Calculer le nom de l'image
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Installer Ansible
+        run: pipx install --include-deps --force ansible
+
+      - name: Calculer le dépôt de l'image (en minuscules)
         run: |
-          OWNER="${GITHUB_REPOSITORY_OWNER,,}"
-          echo "IMAGE=ghcr.io/$OWNER/todo-app:$GITHUB_SHA" >> "$GITHUB_ENV"
- 
-      - name: Déployer via SSH
-        uses: appleboy/ssh-action@v1
+          echo "IMAGE_REPO=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/todo-app" \
+            >> "$GITHUB_ENV"
+
+      - name: Déployer avec Ansible
+        uses: dawidd6/action-ansible-playbook@v9
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: deploy
+          playbook: deploy.yml
+          directory: ./ansible
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            docker pull ${{ env.IMAGE }}
-            docker rm -f todo || true
-            docker run -d --name todo --restart always \
-              -p 80:5000 ${{ env.IMAGE }}
-            sleep 5
-            curl --fail --silent http://localhost/health
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          inventory: ${{ secrets.INVENTORY }}
+          options: |
+            --extra-vars image_repo=${{ env.IMAGE_REPO }}
+            --extra-vars image_tag=${{ github.sha }}
+
 
   deploy-production:
     needs: deploy-staging
@@ -157,22 +162,27 @@ jobs:
       name: production
       url: ${{ vars.APP_URL }}
     steps:
-      - name: Calculer le nom de l'image
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Installer Ansible
+        run: pipx install --include-deps --force ansible
+
+      - name: Calculer le dépôt de l'image (en minuscules)
         run: |
-          OWNER="${GITHUB_REPOSITORY_OWNER,,}"
-          echo "IMAGE=ghcr.io/$OWNER/todo-app:$GITHUB_SHA" >> "$GITHUB_ENV"
- 
-      - name: Déployer via SSH
-        uses: appleboy/ssh-action@v1
+          echo "IMAGE_REPO=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/todo-app" \
+            >> "$GITHUB_ENV"
+
+      - name: Déployer avec Ansible
+        uses: dawidd6/action-ansible-playbook@v9
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: deploy
+          playbook: deploy.yml
+          directory: ./ansible
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            docker pull ${{ env.IMAGE }}
-            docker rm -f todo || true
-            docker run -d --name todo --restart always \
-              -p 80:5000 ${{ env.IMAGE }}
-            sleep 5
-            curl --fail --silent http://localhost/health
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          inventory: ${{ secrets.INVENTORY }}
+          options: |
+            --extra-vars image_repo=${{ env.IMAGE_REPO }}
+            --extra-vars image_tag=${{ github.sha }}
+
 
