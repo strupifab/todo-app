@@ -11,9 +11,9 @@ on:
 # Moindre privilège : lecture seule par défaut pour tous les jobs
 permissions:
   concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
-  contents: read
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+    contents: read
  
 jobs:
   build:
