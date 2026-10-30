@@ -31,7 +31,7 @@
         restart_policy: always
         env:
           ADMIN_TOKEN: "{{ admin_token }}"
-        no_log: true #   ne jamais afficher le jeton dans les logs
+      no_log: true #   ne jamais afficher le jeton dans les logs
 
     - name: Vérifier que l'application répond
       ansible.builtin.uri:
