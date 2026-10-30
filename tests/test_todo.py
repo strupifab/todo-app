@@ -53,8 +53,8 @@ def test_api_vider_refuse_sans_jeton(monkeypatch):
     client = app.test_client()
     reponse = client.delete("/taches")
     assert reponse.status_code == 403
- 
- 
+
+
 def test_api_vider_avec_jeton(monkeypatch):
     monkeypatch.setattr("app.todo.ADMIN_TOKEN", "jeton-de-test")
     client = app.test_client()
