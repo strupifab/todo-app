@@ -62,3 +62,5 @@ def test_api_vider_avec_jeton(monkeypatch):
     reponse = client.delete("/taches",
                             headers={"X-Admin-Token": "jeton-de-test"})
     assert reponse.get_json() == []
+
+
