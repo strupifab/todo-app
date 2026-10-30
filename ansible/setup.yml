@@ -1,0 +1,18 @@
+# Premier playbook : préparer le serveur (paquets et dossier)
+- name: Préparer les serveurs
+  hosts: staging
+  become: true
+  vars:
+    paquets: [git, curl]
+
+  tasks:
+    - name: Installer les paquets
+      ansible.builtin.apt:
+        name: "{{ paquets }}"
+        state: present
+        update_cache: true
+
+    - name: Créer le dossier de l'app
+      ansible.builtin.file:
+        path: /opt/todo
+        state: directory

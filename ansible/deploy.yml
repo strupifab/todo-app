@@ -1,0 +1,36 @@
+# Déployer l'app Todo : Docker installé, conteneur lancé, santé vérifiée
+- name: Déployer l'app Todo
+  hosts: staging
+  become: true
+  vars:
+    # Remplacez « votre-compte » par votre nom GitHub, EN MINUSCULES
+    image: ghcr.io/strupifab/todo-app:latest
+
+  tasks:
+    - name: Installer Docker et le module Python pour Docker
+      ansible.builtin.apt:
+        name: [docker.io, python3-docker]
+        state: present
+        update_cache: true
+
+    - name: Démarrer Docker
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Lancer le conteneur Todo
+      community.docker.docker_container:
+        name: todo
+        image: "{{ image }}"
+        pull: always
+        ports: ["80:5000"]
+        restart_policy: always
+
+    - name: Vérifier que l'application répond
+      ansible.builtin.uri:
+        url: http://localhost/health
+      register: sante
+      retries: 5
+      delay: 3
+      until: sante.status == 200
