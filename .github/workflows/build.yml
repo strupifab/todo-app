@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Récupérer le code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
  
       - name: Installer Python
         uses: actions/setup-python@v5
@@ -68,7 +68,7 @@ jobs:
       packages: write
     steps:
       - name: Récupérer le code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
  
       - name: Calculer le nom de l'image (en minuscules)
         run: |
@@ -99,7 +99,7 @@ jobs:
       checks: write
     steps:
       - name: Récupérer le code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
  
       - name: Installer Python
         uses: actions/setup-python@v5
@@ -136,7 +136,7 @@ jobs:
       url: ${{ vars.APP_URL }}
     steps:
       - name: Récupérer le code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Installer Ansible
         run: pipx install --include-deps --force ansible
@@ -171,7 +171,7 @@ jobs:
       url: ${{ vars.APP_URL }}
     steps:
       - name: Récupérer le code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Installer Ansible
         run: pipx install --include-deps --force ansible
