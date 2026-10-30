@@ -115,7 +115,7 @@ jobs:
  
       - name: Rapport de tests
         if: always()
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v3
         with:
           name: Tests PyTest
           path: rapport.xml
