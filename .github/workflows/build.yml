@@ -152,8 +152,6 @@ jobs:
           ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
         with:
           playbook: deploy.yml
-        with:
-          playbook: deploy.yml
           directory: ./ansible
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
