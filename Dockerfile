@@ -17,7 +17,7 @@ RUN useradd --create-home appuser
 USER appuser
 
 # Port utilisé par l'application
-EXPOSE 5000
+EXPOSE 5000 8000
  
 # Commande lancée au démarrage du conteneur
 CMD ["python", "app/todo.py"]

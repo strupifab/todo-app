@@ -1,8 +1,10 @@
 """Application Todo : une petite liste de tâches (API web avec Flask)."""
 import os
-
+import time
+ 
 from dotenv import load_dotenv
-from flask import Flask, jsonify, request
+from flask import Flask, g, jsonify, request
+from prometheus_client import Counter, Histogram, start_http_server
 
 # En local : lit le fichier .env s'il existe (jamais commité)
 load_dotenv()
@@ -38,6 +40,24 @@ class TodoList:
 
 app = Flask(__name__)
 liste = TodoList()
+# --- Métriques Prometheus ---------------------------------------------
+REQUETES = Counter("todo_requetes_total", "Nombre de requêtes reçues",
+                   ["route", "code"])
+DUREE = Histogram("todo_duree_secondes", "Durée de traitement des requêtes",
+                  ["route"])
+ 
+ 
+@app.before_request
+def demarrer_chrono():
+    g.debut = time.perf_counter()
+ 
+ 
+@app.after_request
+def mesurer(reponse):
+    route = request.url_rule.rule if request.url_rule else "inconnue"
+    REQUETES.labels(route=route, code=reponse.status_code).inc()
+    DUREE.labels(route=route).observe(time.perf_counter() - g.debut)
+    return reponse
 
 
 @app.route("/")
@@ -87,5 +107,7 @@ def tout_effacer():
 
 
 if __name__ == "__main__":
+    # Les métriques sont exposées sur http://<serveur>:8000/metrics
+    start_http_server(8000)
     # 0.0.0.0 : accessible depuis l'extérieur (indispensable dans Docker)
     app.run(host="0.0.0.0", port=5000)
