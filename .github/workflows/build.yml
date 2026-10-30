@@ -47,7 +47,7 @@ jobs:
           echo "GITHUB_STEP_SUMMARY=$GITHUB_STEP_SUMMARY"
 
       - name: Sauvegarder l'artefact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: todo-app
           path: app/
@@ -123,7 +123,7 @@ jobs:
  
       - name: Garder le rapport
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: rapport-tests
           path: rapport.xml
